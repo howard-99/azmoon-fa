@@ -1223,12 +1223,6 @@ thead th {
 tbody tr[style*="background-color"] {
   background: #f8fafc !important;
 }
-.answergroup span[style*="background-color"] {
-  background: #eef3fa !important;
-  border-radius: 6px;
-  padding: 3px;
-  display: inline-block;
-}
 
 .az-question-meta {
   padding: 8px 12px;
@@ -1455,4 +1449,53 @@ tbody tr[style*="background-color"] {
   }
 }
 
-.footer .copyright{direction:rtl;unicode-bidi:isolate}
+.footer .copyright {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+.tcecodebtn {
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 4px;
+  margin: 3px;
+  background: #f4f7fc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  vertical-align: middle;
+}
+.tcecodebtn:hover {
+  background: #eaf1ff;
+}
+.tcecodebtn .button {
+  width: 28px;
+  height: 28px;
+}
+.formw[style*="border:1px solid #808080"] {
+  border: 0 !important;
+}
+.tcecodecolorwrap {
+  width: 40px;
+  height: 40px;
+  margin: 3px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f4f7fc;
+}
+.tcecodecolorwrap .button {
+  width: 28px;
+  height: 28px;
+}
+
+table td[style*="background-color:#BBFFBB"],
+table td[style*="background-color:#bbffbb"] {
+  background: #e8f6ef !important;
+  color: var(--good);
+}
+table td[style*="background-color:#FFBBBB"],
+table td[style*="background-color:#ffbbbb"] {
+  background: #fff1f3 !important;
+  color: var(--bad);
+}

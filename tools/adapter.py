@@ -186,10 +186,17 @@ def plan(root, url, short, full):
         editor = editor.replace('>' + old + '</option>', '>' + new + '</option>')
     store(editorrel, editor)
 
+    for path in sorted((root / 'admin/code').glob('*.php')):
+        rel = path.relative_to(root).as_posix()
+        current = changes.get(rel, read(rel))
+        if '[sec]' in current:
+            store(rel, current.replace('[sec]', 'ثانیه'))
+
     regrel = 'shared/config.default/tce_user_registration.php'
     store(regrel, set_define(read(regrel), 'K_USRREG_ENABLED', 'false'))
     statsrel = 'shared/code/tce_functions_test_stats.php'
     stats = read(statsrel).replace("date('i:s',", "gmdate('i:s',")
+    stats = replace_once(stats, "        if ($tu['passmsg'] === true) {", "        if ((int)($tu['unrated'] ?? 0) > 0) {\n            $passlabel = '<span>کارنامه موقت</span> ';\n        } elseif ($tu['passmsg'] === true) {", 'pending result label')
     start = stats.index('function F_printUserTestStat(')
     end = stats.index('\n/**', start)
     function = stats[start:end]
