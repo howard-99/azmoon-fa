@@ -14,7 +14,7 @@ const out = process.env.ARTIFACT_DIR || 'test-artifacts';
     await page.context().clearCookies();
     await page.goto(`${base}/${area}/code/tce_login.php`);
     await page.locator('#xuser_name').fill(user);await page.locator('#xuser_password').fill(password);
-    await submit('#login');await page.waitForURL('**/index.php');assert.equal(await page.locator('#form_login').count(),0);
+    await submit('#login');await page.waitForURL('**/index.php').catch(async error=>{console.log((await page.locator('body').innerText()).slice(0,2200));throw error});assert.equal(await page.locator('#form_login').count(),0);
   };
   await page.goto(`${base}/public/code/`);
   assert.equal(await page.locator('html').getAttribute('dir'),'rtl');

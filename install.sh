@@ -35,6 +35,8 @@ esac
 [[ $# -le 1 ]] || fail 'تعداد گزینه‌ها معتبر نیست.'
 [[ $EUID -eq 0 ]] || fail 'نصب را با sudo اجرا کنید.'
 [[ -t 0 ]] || fail 'نصب را در ترمینال تعاملی اجرا کنید.'
+# /etc/os-release is supplied by the target OS.
+# shellcheck disable=SC1091
 [[ "$(. /etc/os-release; printf '%s:%s' "$ID" "$VERSION_ID")" == ubuntu:24.04 ]] || fail 'این نصب‌کننده برای Ubuntu Server 24.04 است.'
 for command in python3 flock ip; do command -v "$command" >/dev/null || fail "ابزار لازم موجود نیست: $command"; done
 exec 9>/run/lock/azmoon-fa-install.lock
