@@ -1,0 +1,6 @@
+{
+  "name": "azmoon-fa", "version": "1.0.0", "private": true,
+  "description": "Persian TCExam adapter and Ubuntu installer by howard-99",
+  "scripts": {"test:browser": "node tests/browser.cjs"},
+  "devDependencies": {"playwright": "1.58.2"}
+}

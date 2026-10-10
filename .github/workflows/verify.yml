@@ -1,0 +1,48 @@
+name: Fresh Ubuntu installation and Persian exam
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Static checks
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y shellcheck
+          shellcheck install.sh backup.sh doctor.sh
+          bash install.sh --check
+      - name: Fresh interactive installation
+        run: sudo --preserve-env=CI python3 tests/run_install.py
+      - name: Installed source checks and backup
+        run: |
+          sudo bash doctor.sh
+          sudo bash backup.sh
+          sudo bash install.sh </dev/null && exit 1 || test -f /var/lib/azmoon-fa/access.txt
+          php tests/test_review.php
+      - name: Seed disposable exam
+        run: |
+          sudo touch /var/www/azmoon-fa/.azmoon-test
+          sudo AZMOON_TEST=1 php tests/seed.php /var/www/azmoon-fa
+      - name: Browser tests
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npm run test:browser
+      - name: Save evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-and-install-evidence
+          path: test-artifacts/
+          if-no-files-found: ignore
