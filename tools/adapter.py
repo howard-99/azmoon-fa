@@ -162,6 +162,7 @@ def plan(root, url, short, full):
     store(timerrel, timer)
     footerrel = 'shared/code/tce_page_userbar.php'
     footer = read(footerrel).replace('TCExam</a> ver. ', 'TCExam</a> نسخه ').replace(' - Copyright &copy;', ' · حقوق مؤلف &copy;')
+    footer = re.sub(r'2004-(\d{4}) Nicola Asuni - <a', r'<bdi>2004–\1 · Nicola Asuni</bdi> · <a', footer)
     store(footerrel, footer)
 
     pdfrel = 'shared/config.default/tce_pdf.php'
@@ -198,6 +199,7 @@ def plan(root, url, short, full):
     meta_start = function.index("            $ret .= '<strong>['")
     meta_end = function.index('            // display question description', meta_start)
     function = function[:meta_start] + "            $ret .= Azmoon_question_meta($m);\n" + function[meta_end:]
+    function = replace_once(function, "            $ret .= '<br /><br />' . K_NEWLINE;", '', 'question review spacing')
     store(statsrel, stats[:start] + function + stats[end:])
 
     menurel = 'public/code/tce_page_menu.php'

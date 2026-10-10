@@ -1454,3 +1454,5 @@ tbody tr[style*="background-color"] {
     font-size: 15pt;
   }
 }
+
+.footer .copyright{direction:rtl;unicode-bidi:isolate}
