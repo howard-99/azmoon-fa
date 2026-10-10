@@ -19,7 +19,7 @@ const out = process.env.ARTIFACT_DIR || 'test-artifacts';
   await page.goto(`${base}/public/code/`);
   assert.equal(await page.locator('html').getAttribute('dir'),'rtl');
   await page.screenshot({path:`${out}/login.png`,fullPage:true});
-  await login('public','student','Student-Test-123!');
+  await login('public',process.env.TEST_STUDENT||'student','Student-Test-123!');
   let attempt=process.env.EXISTING_ATTEMPT;
   if (!attempt) {
     await page.goto(`${base}/public/code/tce_test_execute.php?testid=1`);
@@ -62,7 +62,7 @@ const out = process.env.ARTIFACT_DIR || 'test-artifacts';
   await page.screenshot({path:`${out}/results-mobile.png`,fullPage:true});
   await page.goto(`${base}/admin/code/azmoon_settings.php`);
   assert.equal(await page.locator('#short_name').count(),0,'Student cannot change institution');
-  await login('public','otherstudent','Student-Test-123!');
+  await login('public',process.env.TEST_OTHER||'otherstudent','Student-Test-123!');
   await page.goto(result); assert.equal(await page.locator('.az-score').count(),0,'No other student results');
   const denied=await page.request.get(`${base}/public/code/tce_pdf_results.php?test_id=1&testuser_id=${attempt}&mode=3`,{headers:await page.evaluate(()=>({'User-Agent':navigator.userAgent,'Accept-Language':navigator.language}))});
   assert.notEqual((await denied.body()).subarray(0,5).toString(),'%PDF-','No other student PDF');
