@@ -3,12 +3,15 @@
 import os, pty, select, sys, time
 if os.environ.get('CI') != 'true' or os.geteuid() != 0:
     sys.exit('Only a disposable CI runner may execute this harness.')
+repeat = sys.argv[1:] == ['--repeat-check']
 prompts = [
  ('نام کوتاه مؤسسه:', 'DEMO'), ('نام کامل مؤسسه:', 'آموزشگاه نمونه'),
  ('آدرس سامانه با', 'http://127.0.0.1:8098'), ('شبکه مجاز', '127.0.0.0/8'),
  ('نام کاربری مدیر', 'manager'), ('رمز مدیر (', 'Test-Admin-Only-123!'),
  ('تکرار رمز مدیر:', 'Test-Admin-Only-123!'), ('شروع نصب؟', 'y'),
 ]
+if repeat: prompts = []
+seen = ''
 pid, fd = pty.fork()
 if pid == 0:
     os.execvp('bash', ['bash', 'install.sh'])
@@ -20,12 +23,15 @@ while time.monotonic() < deadline:
         except OSError: break
         if not chunk: break
         sys.stdout.buffer.write(chunk); sys.stdout.buffer.flush()
-        pending += chunk.decode('utf-8', errors='replace')
+        decoded = chunk.decode('utf-8', errors='replace')
+        pending += decoded; seen = (seen + decoded)[-4000:]
         if position < len(prompts) and prompts[position][0] in pending:
             os.write(fd, (prompts[position][1]+'\n').encode('utf-8'))
             position += 1; pending = ''
 else:
     os.kill(pid, 15); sys.exit('Installer timed out')
 _, status = os.waitpid(pid, 0)
+if repeat:
+    sys.exit(0 if os.waitstatus_to_exitcode(status) != 0 and 'نصب قبلی یا نیمه‌تمام' in seen else 1)
 if position != len(prompts): sys.exit('Installer stopped before all prompts')
 sys.exit(os.waitstatus_to_exitcode(status))

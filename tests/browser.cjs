@@ -6,7 +6,8 @@ const out = process.env.ARTIFACT_DIR || 'test-artifacts';
 (async () => {
   await fs.mkdir(out, {recursive: true});
   const browser = await chromium.launch({headless: true, ...(process.env.CHROMIUM_EXECUTABLE ? {executablePath: process.env.CHROMIUM_EXECUTABLE}: {})});
-  const page = await browser.newPage({viewport: {width:1440,height:1000}});
+  const probe = await browser.newPage();const agent=await probe.evaluate(()=>navigator.userAgent);await probe.context().close();
+  const page = await browser.newPage({viewport: {width:1440,height:1000},userAgent:agent+' AzmoonFaQA/'+Date.now()});
   const errors=[]; page.on('pageerror', e => errors.push(e.message));
   let headers={}; page.on('request',async r => {if (r.url().includes('tce_show_result_user.php')) headers=await r.allHeaders()});
   const submit=async (selector) => Promise.all([page.waitForNavigation(),page.locator(selector).click()]);
@@ -66,7 +67,8 @@ const out = process.env.ARTIFACT_DIR || 'test-artifacts';
   assert.equal(await page.locator('#short_name').count(),0,'Student cannot change institution');
   await login('public',process.env.TEST_OTHER||'otherstudent','Student-Test-123!');
   await page.goto(result); assert.equal(await page.locator('.az-score').count(),0,'No other student results');
-  const denied=await page.request.get(`${base}/public/code/tce_pdf_results.php?test_id=1&testuser_id=${attempt}&mode=3`,{headers:await page.evaluate(()=>({'User-Agent':navigator.userAgent,'Accept-Language':navigator.language}))});
+  const denied=await page.request.get(`${base}/public/code/tce_pdf_results.php?test_id=1&testuser_id=${attempt}&mode=3`,{headers});
+  assert.equal(denied.status(),403,'Authenticated other student is denied');
   assert.notEqual((await denied.body()).subarray(0,5).toString(),'%PDF-','No other student PDF');
   // Log out via the same browser before administrator authentication.
   await login('admin',process.env.ADMIN_NAME||'manager',process.env.ADMIN_PASSWORD||'Test-Admin-Only-123!');

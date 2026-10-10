@@ -28,7 +28,7 @@ jobs:
         run: |
           sudo bash doctor.sh
           sudo bash backup.sh
-          sudo bash install.sh </dev/null && exit 1 || test -f /var/lib/azmoon-fa/access.txt
+          sudo --preserve-env=CI python3 tests/run_install.py --repeat-check
           php tests/test_review.php
       - name: Seed disposable exam
         run: |
