@@ -157,6 +157,13 @@ def plan(root, url, short, full):
         changes[area+'/styles/azmoon_rtl.css'] = changes[area+'/styles/azmoon.css']
         changes[area+'/config.default/theme/azmoon.php'] = '<?php\n// Assets are loaded in the head to prevent visual flicker.\n'
 
+    timerrel = 'shared/jscripts/timer.js'
+    timer = replace_once(read(timerrel), "let sign = '-';", "let sign = '';", 'countdown presentation')
+    store(timerrel, timer)
+    footerrel = 'shared/code/tce_page_userbar.php'
+    footer = read(footerrel).replace('TCExam</a> ver. ', 'TCExam</a> نسخه ').replace(' - Copyright &copy;', ' · حقوق مؤلف &copy;')
+    store(footerrel, footer)
+
     pdfrel = 'shared/config.default/tce_pdf.php'
     pdf = read(pdfrel)
     for key, value in {'PDF_HEADER_TITLE': 'AZMOON_BRAND_FULL', 'PDF_HEADER_STRING': "AZMOON_BRAND_SHORT . ' | کارنامه آزمون'", 'PDF_HEADER_LOGO': "'azmoon-mark.png'", 'PDF_AUTHOR': 'AZMOON_BRAND_FULL', 'PDF_FONT_SIZE_DATA': '9'}.items():
@@ -224,6 +231,7 @@ def plan(root, url, short, full):
 
     reportrel = 'shared/code/tce_pdf_report.php'
     report = read(reportrel).replace("date('i:s',", "gmdate('i:s',")
+    report = report.replace('Powered by TCExam (www.tcexam.org)', 'با موتور TCExam (www.tcexam.org)')
     report = report.replace('<b><i><u>', '<b>').replace('</u></i></b>', '</b>').replace(" . ' [sec]'", " . ' (ثانیه)'")
     report = report.replace("$qtype = ['S', 'M', 'T', 'O'];", "$qtype = ['تک‌گزینه‌ای', 'چندگزینه‌ای', 'تشریحی', 'ترتیبی'];")
     option_start = report.index('                            [$marker, $markfill, $index, $idxfill]')

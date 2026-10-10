@@ -54,6 +54,7 @@ function Azmoon_result_summary(array $stats): void {
     $percent = $max > 0 ? round(100*$score/$max, 1) : null;
     $threshold = (float)($t['test_score_threshold'] ?? 0);
     $status = $threshold > 0 ? ($score >= $threshold ? 'قبول' : 'نیاز به تلاش بیشتر') : 'کارنامه آزمون';
+    if ((int)($q['unrated'] ?? 0) > 0) $status = 'کارنامه موقت';
     echo '<section class="az-score" aria-label="خلاصه نتیجه آزمون"><div><small>نتیجه تلاش شما</small><h2>' . Azmoon_e($status) . '</h2>';
     echo '<p>' . Azmoon_e($t['test_name'] ?? '') . '</p></div>';
     echo '<div class="az-score-value"><bdi>' . Azmoon_e($percent === null ? $score : $percent.'%') . '</bdi><small>نمره: <bdi>' . Azmoon_e($score . ' / ' . $max) . '</bdi></small></div></section>';

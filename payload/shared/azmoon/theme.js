@@ -56,6 +56,7 @@
   const testform = document.querySelector('#testform');
   if (testform) {
     document.body.classList.add('az-exam');
+    const timerLabel = document.querySelector('.timerlabel'); if (timerLabel) timerLabel.textContent = 'زمان باقیمانده:';
     const hint = document.createElement('p'); hint.className = 'az-exam-hint';
     hint.textContent = 'پاسخ‌ها با ثبت پاسخ یا رفتن به سؤال دیگر ارسال می‌شوند. برای خروج، ابتدا آزمون را پایان دهید.';
     testform.before(hint);
@@ -73,7 +74,14 @@
     const list = testform.querySelector('.qlist');
     if (list) {
       const all = [...list.children];
-      all.forEach((li, index) => { const input = li.querySelector('input'); if (input) { input.value = (index + 1).toLocaleString('fa-IR'); input.setAttribute('aria-label', `سؤال ${(index + 1).toLocaleString('fa-IR')}`); } });
+      all.forEach((li, index) => {
+        const input = li.querySelector('input'); if (!input) return;
+        const detail = document.createElement('span'); detail.className = 'az-qlist-detail';
+        input.title = li.textContent.trim();
+        [...li.childNodes].filter(node => node !== input).forEach(node => detail.append(node));
+        li.append(detail); input.value = (index + 1).toLocaleString('fa-IR');
+        input.setAttribute('aria-label', `سؤال ${(index + 1).toLocaleString('fa-IR')}`);
+      });
       const current = Math.max(1, all.findIndex(li => li.classList.contains('selected')) + 1);
       const progress = document.createElement('div'); progress.className = 'az-progress';
       const label = document.createElement('span'); label.textContent = `سؤال ${current.toLocaleString('fa-IR')} از ${all.length.toLocaleString('fa-IR')}`;

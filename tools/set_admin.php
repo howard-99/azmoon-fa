@@ -17,7 +17,7 @@ $first='مدیر';$last='سامانه';$old='admin';
 $stmt->bind_param('sssss', $name, $hash, $first, $last, $old); $stmt->execute();
 if ($stmt->affected_rows!==1) { fwrite(STDERR,"Default admin account not found\n"); exit(4); }
 $stmt->close();
-$mysqli->query("UPDATE tce_groups SET group_name='گروه عمومی' WHERE group_id=1");
-$mysqli->query("UPDATE tce_modules SET module_name='درس عمومی' WHERE module_id=1");
+$mysqli->query("UPDATE ".K_TABLE_GROUPS." SET group_name='گروه عمومی' WHERE group_id=1");
+$mysqli->query("UPDATE ".K_TABLE_MODULES." SET module_name='درس عمومی' WHERE module_id=1");
 $mysqli->close();
 fwrite(STDOUT,"Administrator created with a private password.\n");

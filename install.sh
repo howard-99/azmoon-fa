@@ -131,7 +131,7 @@ cp "$BUILD/upstream.json" "$SOURCE/shared/azmoon/upstream.json"
 STEP='آماده‌سازی کتابخانه‌ها و فونت PDF'
 say '[۴/۸] آماده‌سازی وابستگی‌ها و خروجی PDF'
 cd "$SOURCE"
-COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_PROCESS_TIMEOUT=1200 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+COMPOSER_HOME="$BUILD/composer-home" COMPOSER_CACHE_DIR="$BUILD/composer-cache" COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_PROCESS_TIMEOUT=1200 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 [[ -f vendor/autoload.php && -d vendor/tecnickcom/tc-lib-pdf-font/target/fonts ]] || fail 'کتابخانه یا فونت PDF کامل نصب نشده است.'
 make lang
 [[ -f cache/lang/language_tmx_fa.php ]] || fail 'ساخت ترجمه فارسی ناموفق بود.'

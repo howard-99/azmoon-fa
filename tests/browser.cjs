@@ -11,6 +11,8 @@ const out = process.env.ARTIFACT_DIR || 'test-artifacts';
   let headers={}; page.on('request',async r => {if (r.url().includes('tce_show_result_user.php')) headers=await r.allHeaders()});
   const submit=async (selector) => Promise.all([page.waitForNavigation(),page.locator(selector).click()]);
   const login=async (area,user,password) => {
+    // Preserve the upstream login rate limiter; separate simulated users in time.
+    await new Promise(resolve=>setTimeout(resolve,4000));
     await page.context().clearCookies();
     await page.goto(`${base}/${area}/code/tce_login.php`);
     await page.locator('#xuser_name').fill(user);await page.locator('#xuser_password').fill(password);
