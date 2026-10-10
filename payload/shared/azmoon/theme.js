@@ -77,9 +77,11 @@
       all.forEach((li, index) => {
         const input = li.querySelector('input'); if (!input) return;
         const detail = document.createElement('span'); detail.className = 'az-qlist-detail';
-        input.title = li.textContent.trim();
+        const answered = li.querySelectorAll('abbr')[1]?.classList.contains('onbox');
+        const badge = document.createElement('small');badge.className = 'az-question-status';badge.textContent = answered ? 'ثبت‌شده' : 'بدون ثبت';
+        li.classList.toggle('az-answered', !!answered);
         [...li.childNodes].filter(node => node !== input).forEach(node => detail.append(node));
-        li.append(detail); input.value = (index + 1).toLocaleString('fa-IR');
+        li.append(detail, badge); input.value = (index + 1).toLocaleString('fa-IR');
         input.setAttribute('aria-label', `سؤال ${(index + 1).toLocaleString('fa-IR')}`);
       });
       const current = Math.max(1, all.findIndex(li => li.classList.contains('selected')) + 1);

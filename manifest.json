@@ -29,8 +29,8 @@
     "shared/azmoon/fonts/OFL.txt": "17e355067c8284f47743a1ee3b1ef7ff684ff0601eda357f9353b10b3016ab31",
     "shared/azmoon/fonts/Vazirmatn.woff2": "4e3fa217d38fdafc1fea4414ceb58ca5e662cf0ab5fa735a8c8c20e8b42cad92",
     "shared/azmoon/mark.svg": "9bd235be6e17460a35d8884c1e3d72f13b96f9d88002ef48456f38f970ab6c07",
-    "shared/azmoon/runtime.php": "0ac9fee419d8d4f5d903d12574a2903e775a75dc30b6a38de2c5e8ad0f92799a",
-    "shared/azmoon/theme.css": "5dcc7f31b50c20d80daaea1bac955fd8b42f58389a6d383bb6eaf9550b9ff40f",
-    "shared/azmoon/theme.js": "0a99cf8d446c954673158277fea9447deb89898424e4b233d8bb04af2abd19cc"
+    "shared/azmoon/runtime.php": "5b34cbfc1b8b49ecbbe54e76e8590981f77fbdf10c141e0a061601d15ea0404f",
+    "shared/azmoon/theme.css": "1e76018544e056b0747d540ecc3a6884ee290a199b3830787500653dd9049b12",
+    "shared/azmoon/theme.js": "6ff4e6ce07d527471671eb6f17d0e1257e95798870a92bd528961ecbd115753a"
   }
 }

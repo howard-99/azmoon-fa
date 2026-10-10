@@ -139,3 +139,13 @@ function Azmoon_subject_summary(array $stats): string {
     }
     return $html . '</tbody></table>';
 }
+
+function Azmoon_pdf_option_label(array $question, array $answer): string {
+    $selected=(int)$answer['logansw_selected']; $right=F_getBoolean($answer['answer_isright']);
+    if ((int)$question['question_type'] === 4) {
+        return 'ترتیب شما: ' . ((int)$answer['logansw_position'] ?: 'بی‌پاسخ') . ' / درست: ' . (int)$answer['answer_position'];
+    }
+    if ($selected > 0) return 'انتخاب شما · ' . ($right ? 'درست' : 'نادرست');
+    if ((int)$question['question_type'] === 1) return $right ? 'گزینه صحیح' : 'انتخاب نشده';
+    return ($selected < 0 ? 'بی‌پاسخ' : 'انتخاب نشده') . ' · گزینه ' . ($right ? 'صحیح' : 'نادرست');
+}

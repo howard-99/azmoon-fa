@@ -210,6 +210,9 @@ def plan(root, url, short, full):
     marker = "echo '<div class=\"tceformbox\">' . K_NEWLINE;"
     result = replace_once(result, marker, marker + "\nAzmoon_result_summary($teststat);\nAzmoon_print_button();", 'result summary/print')
     result = replace_once(result, "F_printTestStat($test_id, 0, $user_id, 0, 0, $testuser_id, $teststat, 2, true)", "Azmoon_subject_summary($teststat)", 'student subject summary')
+    redundant_start = result.index("$passmsg = '';")
+    redundant_end = result.index("echo\n    getFormDescriptionLine(\n        $l['w_comment']", redundant_start)
+    result = result[:redundant_start] + result[redundant_end:]
     store(resultrel, result)
 
     # Keep reporting access tied to the completed attempt and its publication flags.
@@ -231,13 +234,16 @@ def plan(root, url, short, full):
 
     reportrel = 'shared/code/tce_pdf_report.php'
     report = read(reportrel).replace("date('i:s',", "gmdate('i:s',")
+    report = report.replace('#cccccc', '#edf3ff')
+    report = report.replace("if (($data['test']['test_score_threshold'] ?? 0) > 0) {", "if (($data['test']['test_score_threshold'] ?? 0) > 0 && (int)($data['unrated'] ?? 0) === 0) {")
+    report = report.replace("        $html = '<table border=\"0.5\" cellpadding=\"3\" style=\"font-size:8pt;\">';", "        if ((int)($data['unrated'] ?? 0) > 0) $passmsg = ' · کارنامه موقت';\n        $html = '<table border=\"0.5\" cellpadding=\"3\" style=\"font-size:8pt;\">';")
     report = report.replace('Powered by TCExam (www.tcexam.org)', 'با موتور TCExam (www.tcexam.org)')
     report = report.replace('<b><i><u>', '<b>').replace('</u></i></b>', '</b>').replace(" . ' [sec]'", " . ' (ثانیه)'")
     report = report.replace("$qtype = ['S', 'M', 'T', 'O'];", "$qtype = ['تک‌گزینه‌ای', 'چندگزینه‌ای', 'تشریحی', 'ترتیبی'];")
     option_start = report.index('                            [$marker, $markfill, $index, $idxfill]')
     option_end = report.index("                            $html .= '</tr>';", option_start) + len("                            $html .= '</tr>';")
     report = report[:option_start] + """                            $state = Azmoon_option_state($m, $ma);
-                            $html .= '<tr><td style="width:35%;">' . Azmoon_e($state['label']) . '</td><td style="width:65%;">' . F_decode_tcecode($ma['answer_description']) . '</td></tr>';""" + report[option_end:]
+                            $html .= '<tr><td style="width:35%;">' . Azmoon_e(Azmoon_pdf_option_label($m, $ma)) . '</td><td style="width:65%;">' . F_decode_tcecode($ma['answer_description']) . '</td></tr>';""" + report[option_end:]
     report = report.replace('<tr><td colspan="3">', '<tr><td colspan="2">')
     meta_start = report.index("                $html = '<table border=\"0.5\" cellpadding=\"2\" style=\"font-size:8pt;")
     meta_end = report.index("                $html .= '<div style=", meta_start)
